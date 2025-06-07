@@ -29,7 +29,7 @@ class ProductListPage extends StatelessWidget {
             onPressed: () {
               final qty = int.tryParse(qtyController.text) ?? 1;
               Provider.of<CartProvider>(context, listen: false)
-                  .addToCart(product, qty);
+                  .addToLocalCart(product, qty);
               Navigator.of(ctx).pop();
             },
             child: const Text('Tambah'),

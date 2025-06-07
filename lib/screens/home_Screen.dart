@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rest_api_login/models/product.dart';
 import 'package:rest_api_login/widgets/product_item.dart';
 import 'package:rest_api_login/services/api_service.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
+import 'package:rest_api_login/providers/cart_provider.dart';
+import 'package:rest_api_login/screens/cart_Screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -11,14 +15,14 @@ class HomeScreen extends StatelessWidget {
         children: [
           // Background biru
           Container(
-            height: MediaQuery.of(context).size.height * 0.65,
-            width: MediaQuery.of(context).size.width * 0.85,
+            height: 400, // Sesuaikan tinggi sesuai kebutuhan
+            width: double.infinity,
             decoration: BoxDecoration(
+              color: Colors.blue,
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(360),
-                bottomRight: Radius.circular(360),
+                bottomLeft: Radius.circular(180),
+                bottomRight: Radius.circular(180),
               ),
-              color: const Color.fromRGBO(33, 150, 243, 1),
             ),
           ),
 
@@ -26,12 +30,27 @@ class HomeScreen extends StatelessWidget {
           Positioned(
             top: 40,
             right: 20,
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              color: const Color.fromARGB(255, 0, 0, 0),
-              iconSize: 28,
-              onPressed: () {
-                // Aksi ke halaman keranjang
+            child: Consumer<CartProvider>(
+              builder: (context, cart, child) {
+                return badges.Badge(
+                  position: badges.BadgePosition.topEnd(top: -8, end: -5),
+                  showBadge: cart.totalQuantity > 0,
+                  badgeContent: Text(
+                    '${cart.totalQuantity}',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.shopping_cart),
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    iconSize: 28,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CartScreen()),
+                      );
+                    },
+                  ),
+                );
               },
             ),
           ),

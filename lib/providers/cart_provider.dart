@@ -3,10 +3,18 @@ import '../models/product.dart';
 
 class CartProvider with ChangeNotifier {
   final List<_CartItem> _items = [];
+  int _cartCount = 0; // simpan jumlah total item dari server
 
   List<_CartItem> get items => [..._items];
+  int get totalQuantity => _cartCount;
 
-  void addToCart(Product product, int qty) {
+  void updateCartCount(int count) {
+    _cartCount = count;
+    notifyListeners();
+  }
+
+  // kalau kamu masih ingin pakai addToCart untuk local update juga, bisa pisah method
+  void addToLocalCart(Product product, int qty) {
     final index = _items.indexWhere((i) => i.product.id == product.id);
     if (index >= 0) {
       _items[index].quantity += qty;

@@ -4,6 +4,8 @@ import 'package:rest_api_login/providers/auth.dart';
 import 'package:rest_api_login/screens/home_Screen.dart';
 import 'package:rest_api_login/screens/signup_Screen.dart';
 import 'package:rest_api_login/utils/http_exception.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rest_api_login/providers/cart_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "/login";
@@ -29,6 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
           .login(_authData['email']!, _authData['password']!);
 
       if (isSuccess) {
+        final prefs = await SharedPreferences.getInstance();
+        final cartCount = prefs.getInt('cartCount') ?? 0;
+
+        // Update jumlah cart di CartProvider
+        Provider.of<CartProvider>(context, listen: false)
+            .updateCartCount(cartCount);
         // Jika login berhasil, arahkan ke HomeScreen
         if (mounted) {
           Navigator.pushReplacement(

@@ -97,11 +97,13 @@ class Auth with ChangeNotifier {
     final _token = responseData['data']['token'];
     final userId = user['id'].toString();
     final userEmail = user['email'];
+    final cartCount = responseData['data']['cart_count'] ?? 0;
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', _token);
     await prefs.setString('userId', userId);
     await prefs.setString('userEmail', userEmail);
+    await prefs.setInt('cartCount', cartCount);
   }
 
   Future<void> authenticate(
@@ -171,6 +173,7 @@ class Auth with ChangeNotifier {
       }
 
       await saveUserData(response.body);
+
       return true; // Login berhasil
     } catch (error) {
       print('Terjadi kesalahan saat login: $error');
